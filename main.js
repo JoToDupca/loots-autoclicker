@@ -9,12 +9,9 @@ twitchChatMessageContent = ".message";
 var parseMsgHTML = function (msgHTML) {
     var badges = msgHTML.prevObject[0].getElementsByClassName("balloon balloon--tooltip balloon--up");
     var isBroadcaster = false;
-
-    console.log(badges);
-    for(var badge in badges){
-        console.log(badge);
-        if (badge.innerText == "Broadcaster"){
-            isBroadcaster = true;
+    for (i = 0; i < badges.length; i++) {
+        if(badges[i].innerText=="Broadcaster"){
+            isBroadcaster=true;
             break;
         }
     }
