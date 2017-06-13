@@ -11,9 +11,13 @@ var parseMsgHTML = function (msgHTML) {
     var isBroadcaster = false;
 
     console.log(badges);
-    badges.forEach(function(index,element){
-        isBroadcaster = element.innerText == "Broadcaster";
-    });
+    for(var badge in badges){
+        console.log(badge);
+        if (badge.innerText == "Broadcaster"){
+            isBroadcaster = true;
+            break;
+        }
+    }
 
     console.log(isBroadcaster);
     var from = msgHTML.prevObject[0].getElementsByClassName("from")[0].innerText;
