@@ -7,7 +7,10 @@ twitchChatMessageContent = ".message";
 
 // Twitch chat message element: rich with media.
 var parseMsgHTML = function (msgHTML) {
-    var badges = msgHTML.prevObject[0].getElementsByClassName("balloon balloon--tooltip balloon--up");
+
+    var rootObject = msgHTML.prevObject[0];
+
+    var badges = rootObject.getElementsByClassName("balloon balloon--tooltip balloon--up");
     var isBroadcaster = false;
     for (i = 0; i < badges.length; i++) {
         if(badges[i].innerText=="Broadcaster"){
@@ -17,8 +20,8 @@ var parseMsgHTML = function (msgHTML) {
     }
 
     console.log(isBroadcaster);
-    var from = msgHTML.prevObject[0].getElementsByClassName("from")[0].innerText;
-    var message = msgHTML.prevObject[0].getElementsByClassName("message")[0].innerText;
+    var from = rootObject.getElementsByClassName("from")[0].innerText;
+    var message = rootObject.getElementsByClassName("message")[0].innerText;
 };
 
 // Bard Search
