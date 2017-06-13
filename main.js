@@ -13,15 +13,22 @@ var parseMsgHTML = function (msgHTML) {
     var badges = rootObject.getElementsByClassName("balloon balloon--tooltip balloon--up");
     var isBroadcaster = false;
     for (i = 0; i < badges.length; i++) {
-        if(badges[i].innerText=="Broadcaster"){
-            isBroadcaster=true;
+        if (badges[i].innerText == "Broadcaster") {
+            isBroadcaster = true;
             break;
         }
     }
 
-    console.log(isBroadcaster);
-    var from = rootObject.getElementsByClassName("from")[0].innerText;
-    var message = rootObject.getElementsByClassName("message")[0].innerText;
+    if (isBroadcaster) {
+        var links = rootObject.getElementsByClassName("message")[0].getElementsByTagName("A");
+        if (links.length > 0) {
+            var link = links[0].getAttribute("HREF");
+            if (link.indexOf("https://loots.com/t/") == 0) {
+                //to oznacza ze zmienna "link" zawiera link do lootsa
+            }
+        }
+    }
+
 };
 
 // Bard Search
@@ -71,9 +78,9 @@ var chatLoadedObserver = new MutationObserver(function (mutations, observer) {
 
             // Alert page action that we found a chat and we're going to get to work.
             chrome.runtime.sendMessage({twitchChat: true}, function (response) {
-              if (response.registered) {
-                console.log("Twitch Chat found.");
-              }
+                if (response.registered) {
+                    console.log("Twitch Chat found.");
+                }
             });
 
             // Unregister chatLoadedObserver. We don't need to check for the chat element anymore.
