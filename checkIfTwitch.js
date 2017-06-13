@@ -5,7 +5,14 @@ chrome.runtime.onMessage.addListener(
                 "from the extension");
     if (request.twitchChat) {
       chrome.pageAction.show(sender.tab.id);
-      chrome.pageAction.setTitle({tabId: sender.tab.id, title: "In search of bards..."});
+      chrome.pageAction.setTitle({tabId: sender.tab.id, title: "Found Twitch chat..."});
       sendResponse({registered: true});
     }
+
+
+    if (request.linkFound) {
+      chrome.tabs.create({"url": request.linkURL, "active": false})
+      sendResponse({loots: true});
+    }
+
   });

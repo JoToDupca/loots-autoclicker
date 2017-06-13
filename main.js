@@ -23,8 +23,13 @@ var parseMsgHTML = function (msgHTML) {
         var links = rootObject.getElementsByClassName("message")[0].getElementsByTagName("A");
         if (links.length > 0) {
             var link = links[0].getAttribute("HREF");
-            if (link.indexOf("https://loots.com/t/") == 0) {
-                //to oznacza ze zmienna "link" zawiera link do lootsa
+            if (link.indexOf("https://loots.com/t/") == 0) {                
+                chrome.runtime.sendMessage({linkFound: true, linkURL: link}, function (response) {
+                    if (response.loots) {
+                        console.log("Loots link found.");
+                    }
+                });
+
             }
         }
     }
