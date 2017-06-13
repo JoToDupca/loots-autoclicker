@@ -11,7 +11,13 @@ chrome.runtime.onMessage.addListener(
 
 
     if (request.linkFound) {
-      chrome.tabs.create({"url": request.linkURL, "active": false})
+      chrome.tabs.create({"url": request.linkURL, "active": false},
+        function(tab) {
+          setTimeout( function() {
+            chrome.tabs.remove(tab.id);
+          }, 10000)
+        }
+      )
       sendResponse({loots: true});
     }
 
