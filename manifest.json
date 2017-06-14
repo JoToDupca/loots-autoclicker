@@ -1,18 +1,22 @@
 {
   "manifest_version": 2,
 
-  "name": "Loots Auto-Clicker",
+  "name": "Loots Auto-Clicker for Twitch.tv",
   "short_name": "Loots Auto-Clicker",
-  "description": "Automatically clicks loots links on Twitch chat.",
+  "description": "Automatically loads, and then closes loots.com links on that appear on Twitch chat to help you effortressly support your favourite streamers.",
   "version": "0.01",
-  "icons": {},
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "background": {
-    "scripts": ["checkIfTwitch.js"],
+    "scripts": ["background.js"],
     "persistent": false
   },
   "page_action": {
     "default_icon": {},
-    "default_title": "loots_clicker"
+    "default_title": "Loots Auto-Clicker: Inactive"
   },
   "content_scripts": [
     {

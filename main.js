@@ -1,15 +1,16 @@
-// These are variables for Twitch elements related to chat.
-// We expose them here so changes can be easily made if Twitch changes them.
-twitchChatUlClass = ".chat-lines";
-twitchChatMessageClass1 = ".message-line";
-twitchChatMessageClass2 = ".chat-line";
-twitchChatMessageContent = ".message";
+// chat element classes
+chatClass_ul = ".chat-lines";
+chatClass_msg1 = ".message-line";
+chatClass_msg2 = ".chat-line";
+chatClass_text = ".message";
 
-// Twitch chat message element: rich with media.
+// twitch chat message element
 var parseMsgHTML = function (msgHTML) {
 
+    // parent node
     var rootObject = msgHTML.prevObject[0];
 
+    // check for broadcaster badge
     var badges = rootObject.getElementsByClassName("balloon balloon--tooltip balloon--up");
     var isBroadcaster = false;
     for (i = 0; i < badges.length; i++) {
@@ -19,76 +20,69 @@ var parseMsgHTML = function (msgHTML) {
         }
     }
 
+    // if is broadcaster
     if (isBroadcaster) {
+        // get link from messae
         var links = rootObject.getElementsByClassName("message")[0].getElementsByTagName("A");
         if (links.length > 0) {
+            // get href attribute
             var link = links[0].getAttribute("HREF");
-            if (link.indexOf("https://loots.com/t/") == 0) {                
+            if (link.indexOf("https://loots.com/t/") == 0) {
+                // run background script                
                 chrome.runtime.sendMessage({linkFound: true, linkURL: link}, function (response) {
                     if (response.loots) {
                         console.log("Loots link found.");
                     }
                 });
-
             }
         }
     }
-
 };
 
-// Bard Search
-function BardSearcher() {
-    // Attach listener that acts when a new chat message appears.
+// chat listener
+function chatListener() {
+    // attach listener that acts when a new chat message appears
     return new MutationObserver(function (mutations) {
-        // For each mutation object, we look for the addedNode object
+        // for each mutation object, look for the addedNode object
         mutations.forEach(function (mutation) {
-            // A chat message would be an added node
+            // added node
             mutation.addedNodes.forEach(function (addedNode) {
-                // At this point it's potentially a chatMessage object.
                 var chatMessage = $(addedNode);
-                if (!chatMessage.is(twitchChatMessageClass1, twitchChatMessageClass2)) {
-                    // this isn't a chat message, skip processing.
+                if (!chatMessage.is(chatClass_msg1, chatClass_msg2)) {
+                    // not a chat message, skip processing
                     return;
                 }
-                // Grab the actual span element with the message content
-                var messageElement = chatMessage.children(twitchChatMessageContent);
+                // grab the actual span element with the message content
+                var messageElement = chatMessage.children(chatClass_text);
                 parseMsgHTML(messageElement);
             });
         });
     });
 }
 
-// configuration of the observer:
+// observer configuration
 var config = {attributes: false, childList: true, characterData: false};
+var chatObserver = chatListener();
 
-var bardFinder = BardSearcher();
-
-// The chat, particularly the element ".chat-lines", is dynamically loaded.
-// We need to wait until the page is done loading everything in order to be
-// able to grab it.
-// We hijack MutationObserver as a way to check if an added, the chat.
+// wait until the page is done loading in order to be able to grab chat
 var htmlBody = $("body")[0];
 var chatLoadedObserver = new MutationObserver(function (mutations, observer) {
     mutations.forEach(function (mutation) {
-        var chatSelector = $(twitchChatUlClass);
+        var chatSelector = $(chatClass_ul);
         if (chatSelector.length > 0) {
-            // Select the node element.
+
+            // select the node element
             var target = chatSelector[0];
+            chatObserver.observe(target, config);
 
-            // Pass in the target node, as well as the observer options
-            // do something
-            // add second MutationObserver
-            //compakt.observe(target, config);
-            bardFinder.observe(target, config);
-
-            // Alert page action that we found a chat and we're going to get to work.
-            chrome.runtime.sendMessage({twitchChat: true}, function (response) {
+            // alert page action that chat is found
+            chrome.runtime.sendMessage({chatFound: true}, function (response) {
                 if (response.registered) {
                     console.log("Twitch Chat found.");
                 }
             });
 
-            // Unregister chatLoadedObserver. We don't need to check for the chat element anymore.
+            // unregister chatLoadedObserver, no need to check for the chat element anymore
             observer.disconnect();
         }
     })
