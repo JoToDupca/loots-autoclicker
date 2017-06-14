@@ -4,7 +4,7 @@
   "name": "Loots Auto-Clicker for Twitch.tv",
   "homepage_url": "https://twitch.tv/fefek",
   "short_name": "Loots Auto-Clicker",
-  "description": "Automatically loads, and then closes loots.com links on that appear on Twitch chat to help you effortressly support your favourite streamers.",
+  "description": "Automatically loads, and then closes loots.com links on Twitch chat to help you effortressly support your favourite streamers.",
   "version": "0.0.0.1",
   "icons": {
     "16": "icon16.png",
