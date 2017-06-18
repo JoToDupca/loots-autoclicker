@@ -3,6 +3,8 @@ chatClass_ul = ".chat-lines";
 chatClass_msg1 = ".message-line";
 chatClass_msg2 = ".chat-line";
 chatClass_text = ".message";
+var lastLink = "";
+
 
 // twitch chat message element
 var parseMsgHTML = function (msgHTML) {
@@ -27,13 +29,15 @@ var parseMsgHTML = function (msgHTML) {
         if (links.length > 0) {
             // get href attribute
             var link = links[0].getAttribute("HREF");
-            if (link.indexOf("https://loots.com/t/") == 0) {
+            if (link.indexOf("https://loots.com/t/") == 0 && link!=lastLink) {
                 // run background script                
                 chrome.runtime.sendMessage({linkFound: true, linkURL: link}, function (response) {
                     if (response.loots) {
                         console.log("Loots link found.");
                     }
                 });
+
+                lastLink = link;
             }
         }
     }
